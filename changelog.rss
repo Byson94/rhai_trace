@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>rhai_trace Changelog</title><link>http://127.0.0.1:7979/rhai_trace/changelog</link><description>Changelog information for rhai_trace</description><category domain="https://github.com/byson94/rhai_trace">rhai_trace Changelog</category><atom:link href="http://127.0.0.1:7979/rhai_trace/changelog.rss" rel="self"/><item><title>Version 0.1.0</title><link>http://127.0.0.1:7979/rhai_trace/changelog/v0.1.0</link><category domain="https://github.com/byson94/rhai_trace">rhai_trace Changelog</category><guid>http://127.0.0.1:7979/rhai_trace/changelog/v0.1.0</guid><content:encoded><![CDATA[<h3>Added</h3>
+<ul>
+<li><code>BetterError</code> structure for generating improved rhai errors.</li>
+<li><code>Span</code> structure for holding <code>span</code>, <code>end</code> (byte offsets) and <code>line</code>, <code>column</code> (human redable position)</li>
+<li><code>SpanTracer</code> for generating a vector of <code>Span</code> from the given code.</li>
+</ul>
+]]></content:encoded></item></channel></rss>
