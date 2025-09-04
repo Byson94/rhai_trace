@@ -1,8 +1,19 @@
 {
   "components": {
-    "changelog": true
+    "artifacts": {
+      "package_managers": {
+        "preferred": {
+          "crates.io": "cargo add rhai_trace"
+        }
+      }
+    }
   },
-
+  "build": {
+    "path_prefix": "rhai_trace"
+  },
+  "project": {
+    "repository": "https://github.com/byson94/rhai_trace"
+  },
   "styles": {
     "theme": "axodark"
   }

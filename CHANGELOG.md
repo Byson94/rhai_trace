@@ -9,6 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
-- BetterError
-- Span
-- SpanTracer
+- `BetterError` structure for generating improved rhai errors.
+- `Span` structure for holding `span`, `end` (byte offsets) and `line`, `column` (human redable position)
+- `SpanTracer` for generating a vector of `Span` from the given code.
