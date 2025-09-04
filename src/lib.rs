@@ -24,7 +24,13 @@
 //!
 //!     println!("Extracted spans:");
 //!     for span in &spans {
-//!         println!("{}..{}: '{}'", span.start(), span.end(), &code[span.start()..span.end()]);
+//!         for span in &spans {
+//!             println!("{}..{}: '{}'",
+//!                 span.start(),
+//!                 span.end(),
+//!                 &code[span.start()..span.end()]
+//!             );
+//!         }
 //!     }
 //!
 //!     // Attempt to execute the code with Rhai engine

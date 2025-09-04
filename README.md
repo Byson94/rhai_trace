@@ -31,7 +31,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     println!("Extracted spans:");
     for span in &spans {
-        println!("{}..{}: '{}'", span.start(), span.end(), &code[span.start()..span.end()]);
+        println!("{}..{}: '{}'",
+            span.start(),
+            span.end(),
+            &code[span.start()..span.end()]
+        );
     }
 
     // Attempt to execute the code with Rhai engine
@@ -41,16 +45,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         Err(e) => {
             // Improve the error using our library
             if let Ok(better) = BetterError::improve_eval_error(&e, code, &engine) {
-                // This returns a [`BetterError`] structure.
-                //
-                // It includes all the information you need to print a
-                // pretty error! It provides all the information needed to display
-                // diagnostics (message, hint, note, etc.) and can be used with any
-                // diagnostic or pretty-printing crate, even those that
-                // don't natively support spans.
-                //
-                // A full example showing this integration is provided below.
-                // See the repository link at the end of this page for a full working example.
+                // ...
             } else {
                 eprintln!("Original Error: {:?}", e);
             }
