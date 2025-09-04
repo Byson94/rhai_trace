@@ -1,6 +1,6 @@
 [package]
 name = "rhai_trace"
-description = "A small library providing better error and span support for [Rhai](https://rhai.rs), the embeddable programming language."
+description = "A small library providing better error and span support for Rhai, the embeddable programming language."
 version = "0.1.0"
 license = "Apache-2.0"
 edition = "2024"
