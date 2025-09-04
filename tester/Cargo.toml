@@ -1,0 +1,9 @@
+[package]
+name = "tester"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ariadne = "0.5.1"
+rhai_trace = { path = "../" }
+rhai = { version = "1.22.2" }

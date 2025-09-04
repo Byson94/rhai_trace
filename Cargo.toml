@@ -1,0 +1,12 @@
+[package]
+name = "rhai_trace"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+members = [
+    "tester"
+]
+
+[dependencies]
+rhai = { version = "1.22.2", features = ["internals"] }
