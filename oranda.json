@@ -1,12 +1,6 @@
 {
   "components": {
-    "artifacts": {
-      "package_managers": {
-        "preferred": {
-          "crates.io": "cargo add rhai_trace"
-        }
-      }
-    }
+    "artifacts": false
   },
   "build": {
     "path_prefix": "rhai_trace"
