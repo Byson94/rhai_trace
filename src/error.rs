@@ -1,9 +1,14 @@
 use crate::span::Span;
 use crate::tracer::SpanTracer;
-use rhai::{Engine, EvalAltResult, ParseError, Position};
+use rhai::{Engine, EvalAltResult, ParseError};
 use std::error::Error;
 
-/// Map a Rhai error to a Span or set of Spans.
+/// A structure containing all the information that you would need
+/// to print pretty errors. 
+///
+/// It can easily be plugged into crates like [`ariadne`][ariadne].
+///
+/// [ariadne]: https://docs.rs/ariadne/latest/ariadne/
 #[derive(Debug, Clone)]
 pub struct BetterError {
     pub message: String,
@@ -77,14 +82,6 @@ impl BetterError {
         }
 
         spans.iter().find(|span| span.line() == line).cloned()
-    }
-}
-
-fn get_deepest_position(error: &EvalAltResult) -> Position {
-    match error {
-        EvalAltResult::ErrorInFunctionCall(_, _, inner, _) => get_deepest_position(inner),
-        EvalAltResult::ErrorInModule(_, inner, _) => get_deepest_position(inner),
-        _ => error.position(),
     }
 }
 

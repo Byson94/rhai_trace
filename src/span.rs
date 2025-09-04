@@ -1,6 +1,22 @@
 use rhai::Position;
 
-/// Represents a span in a Rhai script.
+/// Represents a contiguous segment of source code.
+///
+/// `start` and `end` are **byte offsets** into the source code,
+/// while `line` and `column` represent the human-readable
+/// position of the span.
+///
+/// This structure can be used for highlighting errors, diagnostics,
+/// or feeding external crates like [`ariadne`](https://docs.rs/ariadne/latest/ariadne/).
+///
+/// # Example
+///
+/// ```rust
+/// use rhai_trace::Span;
+///
+/// let span = Span::new(10, 20, 2, 5);
+/// println!("Span covers bytes {}..{} on line {}", span.start(), span.end(), span.line());
+/// ```
 #[derive(Debug, Clone)]
 pub struct Span {
     start: usize,
@@ -10,7 +26,7 @@ pub struct Span {
 }
 
 impl Span {
-    /// Create a new span from values
+    /// Creates a new `Span` from byte offsets, line, and column.
     pub fn new(start: usize, end: usize, line: usize, column: usize) -> Self {
         Span {
             start,
@@ -19,24 +35,25 @@ impl Span {
             column,
         }
     }
-    /// Get the start byte offset
+    /// Returns the starting byte offset of this span.
     pub fn start(&self) -> usize {
         self.start
     }
-    /// Get the end byte offset
+    /// Returns the starting byte offset of this span.
     pub fn end(&self) -> usize {
         self.end
     }
-    /// Get the line
+    /// Returns the line number (1-based) of this span.
     pub fn line(&self) -> usize {
         self.line
     }
-    /// Get the column
+    /// Returns the column number (1-based) of this span.
     pub fn column(&self) -> usize {
         self.column
     }
 
-    /// Create a Span from a Rhai `Position` and script text
+    /// Creates a `Span` from a Rhai `Position` and the script text.
+    /// Computes byte offsets based on line and column.
     pub fn from_pos(script: &str, pos: &Position) -> Self {
         let line_idx = pos.line().expect("Position missing line") - 1;
         let column_idx = pos.position().expect("Position missing column") - 1;
@@ -64,7 +81,7 @@ impl Span {
         }
     }
 
-    /// Create a span from rhai start end position.
+    /// Creates a `Span` from Rhai start and end `Position`s.
     pub fn from_rhai_start_end_pos(script: &str, start: &Position, end: &Position) -> Self {
         let start_offset = pos_to_byte(script, start);
         let end_offset = pos_to_byte(script, end);
@@ -77,7 +94,7 @@ impl Span {
         }
     }
 
-    /// Convert Rhai's Span to our [`Span`]
+    /// Converts a Rhai `Span` to our `Span` type using a reference `Position`.
     pub fn from_rhai_span(script: &str, rhai_span: rhai::Span, pos: &Position) -> Self {
         let start_byte = pos_to_byte(script, &rhai_span.start());
         let end_byte = pos_to_byte(script, &rhai_span.end());

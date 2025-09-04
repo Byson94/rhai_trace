@@ -71,6 +71,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "460fbee9c2c2f33933d720630a6a0bac33ba7053db5344fac858d4b8952d77d5"
 
 [[package]]
+name = "example"
+version = "0.1.0"
+dependencies = [
+ "ariadne",
+ "rhai",
+ "rhai_trace",
+]
+
+[[package]]
 name = "getrandom"
 version = "0.2.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -223,15 +232,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
-]
-
-[[package]]
-name = "tester"
-version = "0.1.0"
-dependencies = [
- "ariadne",
- "rhai",
- "rhai_trace",
 ]
 
 [[package]]

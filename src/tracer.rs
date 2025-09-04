@@ -2,7 +2,28 @@ use crate::span::Span;
 use rhai::{BinaryExpr, Engine, Expr, FlowControl, FnCallExpr, Position, Stmt, StmtBlock};
 use std::error::Error;
 
-/// Extracts spans from Rhai scripts.
+/// [`SpanTracer`] extracts spans from Rhai scripts, providing
+/// byte offsets, line, and column information for each statement or expression.
+///
+/// # Example
+///
+/// ```rust
+/// use rhai_trace::{SpanTracer, Span};
+///
+/// let code = r#"
+///     let a = 1;
+///     let b = a + 2;
+/// "#;
+///
+/// let tracer = SpanTracer::new();
+/// let spans = tracer.extract_from(code).unwrap();
+///
+/// for span in spans {
+///     println!("Span: {}..{} (line {}, column {})", 
+///              span.start(), span.end(), span.line(), span.column());
+/// }
+/// ```
+
 pub struct SpanTracer {
     engine: Engine,
 }
@@ -14,6 +35,8 @@ impl SpanTracer {
         }
     }
 
+    /// Extracts all spans (start/end byte offsets, line, column) from a Rhai script.
+    /// Returns a `Vec<Span>` on success or an error if the script cannot be compiled.
     pub fn extract_from<S: AsRef<str>>(&self, script: S) -> Result<Vec<Span>, Box<dyn Error>> {
         let script_ref = script.as_ref();
         let ast = self.engine.compile(script_ref)?;
