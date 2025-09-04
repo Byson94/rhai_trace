@@ -1,12 +1,19 @@
 # rhai_trace
 
-`rhai-trace` is a simple rust library for providing better error support for [Rhai](https://rhai.rs), the embeddable programming language.
+`rhai_trace` is a lightweight Rust library that enhances [Rhai](https://rhai.rs) scripts with **better error reporting and span tracking**. It walks the script's AST, extracts spans for statements and expressions, and provides structured error information that can be used with any diagnostic or pretty-printing crate.
 
-# Example
+With `rhai_trace`, you can:
+
+- Extract spans (start/end byte offsets, line, column) from Rhai scripts.
+- Get detailed runtime error diagnostics including messages, hints, and notes.
+- Integrate easily with crates like [`ariadne`](https://docs.rs/ariadne) or other diagnostic systems.
+
+## Quick Example
 
 ```rust
 use rhai_trace::{SpanTracer, BetterError};
 use rhai::Engine;
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Example Rhai code
     let code = r#"
@@ -15,14 +22,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         fn multiply(x, y) { x * y }
         let c = multiply("a", 7);  // <-- will trigger runtime error
     "#;
+
     // Initialize the span tracer
     let tracer = SpanTracer::new();
+
     // Extract spans from the code
     let spans = tracer.extract_from(code)?;
+
     println!("Extracted spans:");
     for span in &spans {
         println!("{}..{}: '{}'", span.start(), span.end(), &code[span.start()..span.end()]);
     }
+
     // Attempt to execute the code with Rhai engine
     let engine = Engine::new();
     match engine.eval::<rhai::Dynamic>(code) {
@@ -45,9 +56,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
     }
+
     Ok(())
 }
 ```
 
-For a complete working example that integrates `rhai_trace` with the [`ariadne`](https://docs.rs/ariadne) crate for pretty error reporting, check out the example folder:
+## Full Example
+
+For a complete working example showing integration with [`ariadne`](https://docs.rs/ariadne) for pretty error reporting, see the `example` folder in the repository:
+
 [GitHub Example](https://github.com/Byson94/rhai_trace/tree/main/example)
