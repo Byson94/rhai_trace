@@ -1,10 +1,12 @@
 [package]
 name = "rhai_trace"
 description = "A small library providing better error and span support for Rhai, the embeddable programming language."
-version = "0.1.1"
+version = "0.1.2"
 license = "Apache-2.0"
 edition = "2024"
 repository = "https://github.com/byson94/rhai_trace"
+keywords = ["rhai", "tracing", "debug", "error", "spans"]
+categories = ["development-tools", "development-tools::debugging"]
 
 [workspace]
 members = [
