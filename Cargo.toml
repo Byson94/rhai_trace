@@ -4,6 +4,7 @@ description = "A small library providing better error and span support for Rhai,
 version = "0.1.2"
 license = "Apache-2.0"
 edition = "2024"
+homepage = "https://byson94.is-a.dev/rhai_trace/"
 repository = "https://github.com/byson94/rhai_trace"
 keywords = ["rhai", "tracing", "debug", "error", "spans"]
 categories = ["development-tools", "development-tools::debugging"]
