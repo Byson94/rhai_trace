@@ -4,6 +4,7 @@ description = "A small library providing better error and span support for [Rhai
 version = "0.1.0"
 license = "Apache-2.0"
 edition = "2024"
+repository = "https://github.com/byson94/rhai_trace"
 
 [workspace]
 members = [
