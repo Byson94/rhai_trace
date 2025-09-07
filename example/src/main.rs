@@ -43,7 +43,7 @@ return "test complete"
 
     let result = engine.eval_with_scope::<rhai::Dynamic>(&mut scope, code);
     if let Err(err) = result {
-        let better = rhai_trace::BetterError::improve_eval_error(&err, code, &engine)?;
+        let better = rhai_trace::BetterError::improve_eval_error(&err, code, &engine, None)?;
         display_error(code, &better);
     }
 

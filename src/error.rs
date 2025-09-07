@@ -24,14 +24,20 @@ impl BetterError {
         error: &EvalAltResult,
         code: &str,
         engine: &Engine,
+        tracked_spans: Option<Vec<Span>>
     ) -> Result<Self, Box<dyn Error>> {
         let pos = error.position();
         let line = pos.line().unwrap_or(0);
         let column = pos.position().unwrap_or(1);
         let help_hint = get_error_info(get_root_cause(error), error, engine, code);
 
-        let span_tracer = SpanTracer::new();
-        let spans = span_tracer.extract_from(code)?;
+        let spans = match tracked_spans {
+            Some(s) => s,
+            None => {
+                let span_tracer = SpanTracer::new();
+                span_tracer.extract_from(code)?
+            }
+        };
         let span = Self::find_span_for_position(&spans, line, column)
             .unwrap_or(Span::new(0, 0, line, column));
 
