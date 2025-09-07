@@ -148,7 +148,7 @@ return "test complete"
         engine.eval_with_scope::<Dynamic>(&mut scope, code).map_err(|e| {
             eprintln!(
                 "Better Error: {:#?}",
-                BetterError::improve_eval_error(&e, code, &engine)
+                BetterError::improve_eval_error(&e, code, &engine, None)
             );
         });
     }
