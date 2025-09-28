@@ -26,7 +26,7 @@ impl BetterError {
         engine: &Engine,
         tracked_spans: Option<Vec<Span>>
     ) -> Result<Self, Box<dyn Error>> {
-        let pos = error.position();
+        let pos = get_root_cause(error).position();
         let line = pos.line().unwrap_or(0);
         let column = pos.position().unwrap_or(1);
         let help_hint = get_error_info(get_root_cause(error), error, engine, code);
