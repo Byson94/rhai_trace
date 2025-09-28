@@ -39,7 +39,7 @@
 //!         Ok(result) => println!("Execution result: {:?}", result),
 //!         Err(e) => {
 //!             // Improve the error using our library
-//!             if let Ok(better) = BetterError::improve_eval_error(&e, code, &engine) {
+//!             if let Ok(better) = BetterError::improve_eval_error(&e, code, &engine, None) {
 //!                 // This returns a [`BetterError`] structure.
 //!                 //
 //!                 // It includes all the information you need to print a
@@ -145,7 +145,7 @@ return "test complete"
 
         let engine = Engine::new();
         let mut scope = rhai::Scope::new();
-        engine.eval_with_scope::<Dynamic>(&mut scope, code).map_err(|e| {
+        let _ = engine.eval_with_scope::<Dynamic>(&mut scope, code).map_err(|e| {
             eprintln!(
                 "Better Error: {:#?}",
                 BetterError::improve_eval_error(&e, code, &engine, None)

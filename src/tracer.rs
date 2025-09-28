@@ -42,9 +42,22 @@ impl SpanTracer {
         let ast = self.engine.compile(script_ref)?;
         let mut spans = Vec::new();
 
-        for stmt in ast.statements() {
-            Self::walk_stmt(stmt, script_ref, &mut spans)?;
-        }
+        let mut walk_result: Result<(), Box<dyn std::error::Error>> = Ok(());
+
+        ast.walk(&mut |nodes: &[rhai::ASTNode]| {
+            let current_node = &nodes[0];
+
+            if let rhai::ASTNode::Stmt(stmt) = current_node {
+                if let Err(e) = Self::walk_stmt(stmt, script_ref, &mut spans) {
+                    walk_result = Err(e);
+                    return false;
+                }
+            }
+
+            true
+        });
+
+        walk_result?;
 
         Ok(spans)
     }
