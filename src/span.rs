@@ -55,6 +55,15 @@ impl Span {
     /// Creates a `Span` from a Rhai `Position` and the script text.
     /// Computes byte offsets based on line and column.
     pub fn from_pos(script: &str, pos: &Position) -> Self {
+        if pos.is_none() {
+            return Self {
+                start: 0,
+                end: 0,
+                line: 0,
+                column: 0,
+            };
+        }
+        
         let line_idx = pos.line().expect("Position missing line") - 1;
         let column_idx = pos.position().expect("Position missing column") - 1;
 
