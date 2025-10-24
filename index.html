@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" id="oranda" class="dark axo">
+  <head>
+    <title>rhai_trace</title>
+    
+      <meta property="og:url" content="https://byson94.is-a.dev/rhai_trace/" />
+    
+    
+      <link rel="icon" href="/rhai_trace/favicon.ico" />
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+      <meta name="description" content="A small library providing better error and span support for Rhai, the embeddable programming language." />
+      <meta property="og:description" content="A small library providing better error and span support for Rhai, the embeddable programming language." />
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="rhai_trace" />
+    
+    
+    
+    <meta http-equiv="Permissions-Policy" content="interest-cohort=()" />
+    <link rel="stylesheet" href="/rhai_trace/oranda-v0.6.1.css" />
+    
+    
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-body">
+        
+          <div class="repo_banner">
+            <a href="https://github.com/byson94/rhai_trace">
+              <div class="github-icon" aria-hidden="true"></div>
+              Check out our GitHub!
+            </a>
+          </div>
+        
+
+        <main>
+          <header>
+            
+            <h1 class="title">rhai_trace</h1>
+            
+  <nav class="nav">
+    <ul>
+      <li><a href="/rhai_trace/">Home</a></li>
+
+      
+
+      
+
+      
+        <li><a href="/rhai_trace/book/">Docs</a></li>
+      
+
+      
+
+      
+        <li><a href="/rhai_trace/changelog/">Changelog</a></li>
+      
+    </ul>
+  </nav>
+
+          </header>
+
+          
+
+
+    <h1>rhai_trace</h1>
+<p><code>rhai_trace</code> is a lightweight Rust library that enhances <a href="https://rhai.rs" rel="noopener noreferrer">Rhai</a> scripts with <strong>better error reporting and span tracking</strong>. It walks the script's AST, extracts spans for statements and expressions, and provides structured error information that can be used with any diagnostic or pretty-printing crate.</p>
+<p>With <code>rhai_trace</code>, you can:</p>
+<ul>
+<li>Extract spans (start/end byte offsets, line, column) from Rhai scripts.</li>
+<li>Get detailed runtime error diagnostics including messages, hints, and notes.</li>
+<li>Integrate easily with crates like <a href="https://docs.rs/ariadne" rel="noopener noreferrer"><code>ariadne</code></a> or other diagnostic systems.</li>
+</ul>
+<h2>Quick Example</h2>
+<pre style="background-color:#263238;"><span style="color:#c792ea;">use </span><span style="color:#eeffff;">rhai_trace</span><span style="color:#89ddff;">::{</span><span style="color:#eeffff;">SpanTracer</span><span style="color:#89ddff;">,</span><span style="color:#eeffff;"> BetterError</span><span style="color:#89ddff;">};
+</span><span style="color:#c792ea;">use </span><span style="color:#eeffff;">rhai</span><span style="color:#89ddff;">::</span><span style="color:#eeffff;">Engine</span><span style="color:#89ddff;">;
+</span><span style="color:#eeffff;">
+</span><span style="font-style:italic;color:#c792ea;">fn </span><span style="color:#82aaff;">main</span><span style="color:#89ddff;">() -&gt; </span><span style="color:#eeffff;">Result</span><span style="color:#89ddff;">&lt;()</span><span style="color:#eeffff;">, Box</span><span style="color:#89ddff;">&lt;</span><span style="color:#eeffff;">dyn std</span><span style="color:#89ddff;">::</span><span style="color:#eeffff;">error</span><span style="color:#89ddff;">::</span><span style="color:#eeffff;">Error</span><span style="color:#89ddff;">&gt;&gt; {
+</span><span style="color:#eeffff;">    </span><span style="font-style:italic;color:#546e7a;">// Example Rhai code
+</span><span style="color:#eeffff;">    </span><span style="font-style:italic;color:#c792ea;">let</span><span style="color:#eeffff;"> code </span><span style="color:#89ddff;">= </span><span style="font-style:italic;color:#c792ea;">r</span><span style="color:#89ddff;">#</span><span style="color:#c3e88d;">"
+</span><span style="color:#c3e88d;">        let a = 42;
+</span><span style="color:#c3e88d;">        let b = a + 1;
+</span><span style="color:#c3e88d;">        fn multiply(x, y) { x * y }
+</span><span style="color:#c3e88d;">        let c = multiply("a", 7);  // &lt;-- will trigger runtime error
+</span><span style="color:#c3e88d;">    </span><span style="color:#89ddff;">"#;
+</span><span style="color:#eeffff;">
+</span><span style="color:#eeffff;">    </span><span style="font-style:italic;color:#546e7a;">// Initialize the span tracer
+</span><span style="color:#eeffff;">    </span><span style="font-style:italic;color:#c792ea;">let</span><span style="color:#eeffff;"> tracer </span><span style="color:#89ddff;">= </span><span style="color:#eeffff;">SpanTracer</span><span style="color:#89ddff;">::</span><span style="color:#eeffff;">new</span><span style="color:#89ddff;">();
+</span><span style="color:#eeffff;">
+</span><span style="color:#eeffff;">    </span><span style="font-style:italic;color:#546e7a;">// Extract spans from the code
+</span><span style="color:#eeffff;">    </span><span style="font-style:italic;color:#c792ea;">let</span><span style="color:#eeffff;"> spans </span><span style="color:#89ddff;">=</span><span style="color:#eeffff;"> tracer.</span><span style="color:#82aaff;">extract_from</span><span style="color:#89ddff;">(</span><span style="color:#eeffff;">code</span><span style="color:#89ddff;">)?;
+</span><span style="color:#eeffff;">
+</span><span style="color:#eeffff;">    println!</span><span style="color:#89ddff;">("</span><span style="color:#c3e88d;">Extracted spans:</span><span style="color:#89ddff;">");
+</span><span style="color:#eeffff;">    </span><span style="font-style:italic;color:#c792ea;">for</span><span style="color:#eeffff;"> span </span><span style="color:#89ddff;">in &amp;</span><span style="color:#eeffff;">spans </span><span style="color:#89ddff;">{
+</span><span style="color:#eeffff;">        println!</span><span style="color:#89ddff;">("</span><span style="color:#eeffff;">{}</span><span style="color:#c3e88d;">..</span><span style="color:#eeffff;">{}</span><span style="color:#c3e88d;">: '</span><span style="color:#eeffff;">{}</span><span style="color:#c3e88d;">'</span><span style="color:#89ddff;">",
+</span><span style="color:#eeffff;">            span.</span><span style="color:#82aaff;">start</span><span style="color:#89ddff;">(),
+</span><span style="color:#eeffff;">            span.</span><span style="color:#82aaff;">end</span><span style="color:#89ddff;">(),
+</span><span style="color:#eeffff;">            </span><span style="color:#89ddff;">&amp;</span><span style="color:#eeffff;">code</span><span style="color:#89ddff;">[</span><span style="color:#eeffff;">span.</span><span style="color:#82aaff;">start</span><span style="color:#89ddff;">()..</span><span style="color:#eeffff;">span.</span><span style="color:#82aaff;">end</span><span style="color:#89ddff;">()]
+</span><span style="color:#eeffff;">        </span><span style="color:#89ddff;">);
+</span><span style="color:#eeffff;">    </span><span style="color:#89ddff;">}
+</span><span style="color:#eeffff;">
+</span><span style="color:#eeffff;">    </span><span style="font-style:italic;color:#546e7a;">// Attempt to execute the code with Rhai engine
+</span><span style="color:#eeffff;">    </span><span style="font-style:italic;color:#c792ea;">let</span><span style="color:#eeffff;"> engine </span><span style="color:#89ddff;">= </span><span style="color:#eeffff;">Engine</span><span style="color:#89ddff;">::</span><span style="color:#eeffff;">new</span><span style="color:#89ddff;">();
+</span><span style="color:#eeffff;">    </span><span style="font-style:italic;color:#c792ea;">match</span><span style="color:#eeffff;"> engine.eval</span><span style="color:#89ddff;">::&lt;</span><span style="color:#eeffff;">rhai</span><span style="color:#89ddff;">::</span><span style="color:#eeffff;">Dynamic</span><span style="color:#89ddff;">&gt;(</span><span style="color:#eeffff;">code</span><span style="color:#89ddff;">) {
+</span><span style="color:#eeffff;">        </span><span style="color:#ffcb6b;">Ok</span><span style="color:#89ddff;">(</span><span style="color:#eeffff;">result</span><span style="color:#89ddff;">) =&gt; </span><span style="color:#eeffff;">println!</span><span style="color:#89ddff;">("</span><span style="color:#c3e88d;">Execution result: </span><span style="color:#eeffff;">{:?}</span><span style="color:#89ddff;">",</span><span style="color:#eeffff;"> result</span><span style="color:#89ddff;">),
+</span><span style="color:#eeffff;">        </span><span style="color:#ffcb6b;">Err</span><span style="color:#89ddff;">(</span><span style="color:#eeffff;">e</span><span style="color:#89ddff;">) =&gt; {
+</span><span style="color:#eeffff;">            </span><span style="font-style:italic;color:#546e7a;">// Improve the error using our library
+</span><span style="color:#eeffff;">            </span><span style="font-style:italic;color:#c792ea;">if let </span><span style="color:#ffcb6b;">Ok</span><span style="color:#89ddff;">(</span><span style="color:#eeffff;">better</span><span style="color:#89ddff;">) = </span><span style="color:#eeffff;">BetterError</span><span style="color:#89ddff;">::</span><span style="color:#eeffff;">improve_eval_error</span><span style="color:#89ddff;">(&amp;</span><span style="color:#eeffff;">e</span><span style="color:#89ddff;">,</span><span style="color:#eeffff;"> code</span><span style="color:#89ddff;">, &amp;</span><span style="color:#eeffff;">engine</span><span style="color:#89ddff;">) {
+</span><span style="color:#eeffff;">                </span><span style="font-style:italic;color:#546e7a;">// ...
+</span><span style="color:#eeffff;">            </span><span style="color:#89ddff;">} </span><span style="font-style:italic;color:#c792ea;">else </span><span style="color:#89ddff;">{
+</span><span style="color:#eeffff;">                eprintln!</span><span style="color:#89ddff;">("</span><span style="color:#c3e88d;">Original Error: {:?}</span><span style="color:#89ddff;">",</span><span style="color:#eeffff;"> e</span><span style="color:#89ddff;">);
+</span><span style="color:#eeffff;">            </span><span style="color:#89ddff;">}
+</span><span style="color:#eeffff;">        </span><span style="color:#89ddff;">}
+</span><span style="color:#eeffff;">    </span><span style="color:#89ddff;">}
+</span><span style="color:#eeffff;">
+</span><span style="color:#eeffff;">    </span><span style="color:#ffcb6b;">Ok</span><span style="color:#89ddff;">(())
+</span><span style="color:#89ddff;">}
+</span></pre>
+
+<h2>Full Example</h2>
+<p>For a complete working example showing integration with <a href="https://docs.rs/ariadne" rel="noopener noreferrer"><code>ariadne</code></a> for pretty error reporting, see the <code>example</code> folder in the repository:</p>
+<p><a href="https://github.com/Byson94/rhai_trace/tree/main/example" rel="noopener noreferrer">GitHub Example</a></p>
+
+
+
+        </main>
+      </div>
+
+      <footer>
+        
+          <a href="https://github.com/byson94/rhai_trace"><div class="github-icon" aria-hidden="true"></div></a>
+        
+        <span>
+          rhai_trace, Apache-2.0
+        </span>
+      </footer>
+    </div>
+
+    
+    
+
+    
+
+
+  </body>
+</html>
